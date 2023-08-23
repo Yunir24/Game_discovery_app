@@ -10,25 +10,26 @@ data class GameDTO(
     val id: Int,
 
     @SerialName("name")
-    val name: String,
+    val name: String ="",
 
     @SerialName("description")
     val description: String="",
 
     @SerialName("released")
-    val released: String,
+    val released: String = "",
 
     @SerialName("background_image")
-    val backgroundImage: String,
+    val backgroundImage: String = "",
 
     @SerialName("rating")
-    val rating: Double,
+    val rating: Double = 1.0,
 
     @SerialName("rating_top")
-    val ratingTop: Double,
+    val ratingTop: Double=1.0,
+
 
     @SerialName("metacritic")
-    val metacritic: Int,
+    val metacritic: Int? = 0,
 
     @SerialName("platforms")
     val platforms: List<PlatformsDto>,
