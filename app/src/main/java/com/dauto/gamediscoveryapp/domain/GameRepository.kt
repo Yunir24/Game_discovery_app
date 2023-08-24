@@ -2,6 +2,7 @@ package com.dauto.gamediscoveryapp.domain
 
 import androidx.paging.PagingData
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
@@ -16,7 +17,15 @@ interface GameRepository {
 
     fun getGameListPaging(): Flow<PagingData<Game>>
 
-    fun getGameDetailInfo(): Game
+    suspend fun getGameInfo(gameId: Int): GameDetailInfo
 
-
+/*
+* save delete game
+*
+* load gamelist
+*
+* load gameifo
+* load gamePhoto
+* load gameSeries
+* */
 }

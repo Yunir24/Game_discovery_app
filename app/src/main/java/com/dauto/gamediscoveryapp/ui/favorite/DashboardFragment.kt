@@ -1,10 +1,9 @@
-package com.dauto.gamediscoveryapp.ui.dashboard
+package com.dauto.gamediscoveryapp.ui.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dauto.gamediscoveryapp.databinding.FragmentDashboardBinding

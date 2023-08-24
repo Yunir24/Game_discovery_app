@@ -31,7 +31,7 @@ data class GameDTO(
     @SerialName("metacritic")
     val metacritic: Int? = 0,
 
-    @SerialName("platforms")
+    @SerialName("parent_platforms")
     val platforms: List<PlatformsDto>,
 
     @SerialName("genres")

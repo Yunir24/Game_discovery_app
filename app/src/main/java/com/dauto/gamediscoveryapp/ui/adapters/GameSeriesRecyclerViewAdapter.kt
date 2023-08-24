@@ -1,20 +1,20 @@
-package com.dauto.gamediscoveryapp.ui
+package com.dauto.gamediscoveryapp.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dauto.gamediscoveryapp.databinding.GameItemBinding
 import com.dauto.gamediscoveryapp.domain.entity.Game
 
-class GamerRecyclerView(val context: Context) :
-    PagingDataAdapter<Game, GamerRecyclerView.GameViewHolder>(SimpleCallback()) {
+class GameSeriesRecyclerViewAdapter () :
+    ListAdapter<Game, GamerRecyclerView.GameViewHolder>(SimpleCallback()) {
     class GameViewHolder(val binding: GameItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(path: Game?, context: Context) {
-            path?.let {
+        fun bind(game: Game?, context: Context) {
+            game?.let {
                 binding.nameGameTV.text = it.name
                 Glide
                     .with(context)
@@ -25,9 +25,11 @@ class GamerRecyclerView(val context: Context) :
         }
     }
 
+    var gameItemClickListener: ((Game) -> Unit)? = null
+
     class SimpleCallback : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem.id == newItem.id && oldItem.metacritic == newItem.metacritic
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
@@ -35,12 +37,22 @@ class GamerRecyclerView(val context: Context) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GamerRecyclerView.GameViewHolder {
         val binding = GameItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return GameViewHolder(binding)
+        return GamerRecyclerView.GameViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        holder.bind(getItem(position), context)
+    override fun onBindViewHolder(holder: GamerRecyclerView.GameViewHolder, position: Int) {
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item, holder.itemView.context)
+            holder.itemView.setOnClickListener {
+                gameItemClickListener?.invoke(item)
+            }
+        }
+    }
+
+    class OnClickListener(val clickListener: (game: Game) -> Unit) {
+        fun onClick(game: Game) = clickListener(game)
     }
 }

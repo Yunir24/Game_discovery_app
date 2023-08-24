@@ -2,6 +2,7 @@ package com.dauto.gamediscoveryapp.ui.notifications
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.dauto.gamediscoveryapp.R
 import com.dauto.gamediscoveryapp.databinding.FragmentNotificationsBinding
 import com.dauto.gamediscoveryapp.domain.entity.Genres
+import com.google.android.material.chip.Chip
 
 class NotificationsFragment : Fragment() {
 
@@ -58,6 +60,25 @@ class NotificationsFragment : Fragment() {
             binding.flowContainer.addView(dynamicTextview)
             binding.flowHelper.addView(dynamicTextview)
         }
+        Genres.values().forEach {
+            val dynamicChips = layoutInflater.inflate(R.layout.chip_layout,binding.chipsGroupHelper,false) as Chip
+            dynamicChips.apply {
+                id = View.generateViewId()
+                text = it.name
+
+            }
+            dynamicChips.setOnCheckedChangeListener { buttonView, isChecked ->
+                Log.e("chipsTest", "isChecked: $isChecked")
+                Log.e("chipsTest", "buttonview: ${buttonView.text}")
+            }
+//            binding.flowContainer.addView(dynamicChips)
+            binding.chipsGroupHelper.addView(dynamicChips)
+        }
+        binding.chipTest.setOnCheckedChangeListener { buttonView, isChecked ->
+            Log.e("chipsTest", "isChecked: $isChecked")
+            Log.e("chipsTest", "buttonview: ${buttonView.text}")
+        }
+
     }
 
     override fun onDestroyView() {

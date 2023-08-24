@@ -1,11 +1,10 @@
 package com.dauto.gamediscoveryapp.data.network.dto
 
-
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResultGameDto (
+data class ResultScreenshotsDto(
     @SerialName("results")
-    var results: List<GameDTO>
-    )
+    val screenshotList: List<GameScreenshotsDto>
+)

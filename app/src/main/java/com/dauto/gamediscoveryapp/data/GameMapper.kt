@@ -1,9 +1,8 @@
 package com.dauto.gamediscoveryapp.data
 
-import com.dauto.gamediscoveryapp.data.network.dto.GameDTO
-import com.dauto.gamediscoveryapp.data.network.dto.GenresStringList
-import com.dauto.gamediscoveryapp.data.network.dto.PlatformsDto
+import com.dauto.gamediscoveryapp.data.network.dto.*
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.ParentPlatforms
 
 class GameMapper {
     fun gameDtoToEntity(gameDTO: GameDTO) =
@@ -22,8 +21,10 @@ class GameMapper {
 
     fun listGameDTOtoEntity(listDto: List<GameDTO>):List<Game> = listDto.map{ gameDtoToEntity(it) }
 
-
-
+    fun listScreenDtoToEntity(screenshotsDto: ResultScreenshotsDto) =
+         screenshotsDto.screenshotList.map {
+        it.imageUrl
+    }
 
 
     private fun mapGenresList(genresStringList: List<GenresStringList>): List<String> {
@@ -34,11 +35,17 @@ class GameMapper {
         return list.toList()
     }
 
-    private fun mapPlatformsList(platformsList: List<PlatformsDto>): List<String> {
-        val list = mutableListOf<String>()
-        for (dto in platformsList) {
-            list.add(dto.platform.name)
+    private fun mapPlatformsList(platformsList: List<PlatformsDto>): List<ParentPlatforms> {
+        val list = mutableListOf<ParentPlatforms>()
+        val parentList = ParentPlatforms.values().map { it.name.lowercase() }
+        platformsList.forEach{
+            val platformItem = it.platform.name
+            if (platformItem.lowercase() in parentList)
+            {
+                list.add(ParentPlatforms.valueOf(platformItem.uppercase()))
+            }
         }
+
         return list.toList()
     }
 }

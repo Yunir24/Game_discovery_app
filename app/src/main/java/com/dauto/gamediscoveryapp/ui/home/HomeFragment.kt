@@ -6,27 +6,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
-import com.dauto.gamediscoveryapp.data.GameRepositoryImpl
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dauto.gamediscoveryapp.databinding.FragmentHomeBinding
-import com.dauto.gamediscoveryapp.domain.GameResult
-import com.dauto.gamediscoveryapp.ui.GamerRecyclerView
+import com.dauto.gamediscoveryapp.ui.adapters.GamerRecyclerView
+import com.dauto.gamediscoveryapp.ui.adapters.GamesLoadStateAdapter
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
-    private lateinit var adapterGame: GamerRecyclerView
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+
+    private val adapterGame: GamerRecyclerView = GamerRecyclerView()
+    private val homeViewModel by lazy {
+        ViewModelProvider(this)[HomeViewModel::class.java]
+    }
 
 
     override fun onCreateView(
@@ -34,33 +39,41 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        adapterGame = GamerRecyclerView(requireContext())
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recycler.adapter = adapterGame
-        binding.recycler.layoutManager = GridLayoutManager(requireContext(), 2)
-
+        binding.recycler.adapter = adapterGame.withLoadStateFooter(
+            footer = GamesLoadStateAdapter()
+        )
+//        binding.recycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recycler.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        binding.filterButton.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToFilterFragment())
+        }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                //отменит действие флоу по идее
-                homeViewModel.getGameByPlatforms().collect {
-                    Log.e("SUPER", it.toString())
-                    adapterGame.submitData(it)
-                }
+            homeViewModel.getGameByPlatforms().collectLatest {
+                adapterGame.submitData(it)
             }
         }
-//        binding.getByGenres.setOnClickListener { homeViewModel.getGameByGenres() }
-//        binding.getByPlatform.setOnClickListener {  }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapterGame.addLoadStateListener {
+                binding.recycler.isVisible = it.refresh !is LoadState.Loading
+                binding.progressBarLoad.isVisible = it.refresh is LoadState.Loading
+                binding.errorMessageTV.isVisible = it.refresh is LoadState.Error
+                binding.prependProgressIndicator.isVisible = it.source.prepend is LoadState.Loading
+                binding.appendProgressIndicator.isVisible = it.source.append is LoadState.Loading
+            }
+        }
+        adapterGame.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+        adapterGame.gameItemClickListener = {
+            findNavController().navigate(
+                HomeFragmentDirections.actionNavigationHomeToGameDetailFragment(it.id)
+            )
+        }
 //        homeViewModel.res.observe(viewLifecycleOwner) {
 //            when (it) {
 //                is GameResult.ApiError -> {

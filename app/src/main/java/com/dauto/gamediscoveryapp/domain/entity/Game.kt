@@ -9,6 +9,6 @@ data class Game(
     val rating: Double,
     val ratingTop: Double,
     val metacritic: String,
-    val platforms: List<String>,
+    val platforms: List<ParentPlatforms>,
     val genres: List<String>,
 )

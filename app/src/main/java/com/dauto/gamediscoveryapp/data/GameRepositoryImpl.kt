@@ -9,6 +9,7 @@ import com.dauto.gamediscoveryapp.data.network.GamePagingSource
 import com.dauto.gamediscoveryapp.domain.GameRepository
 import com.dauto.gamediscoveryapp.domain.GameResult
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.skydoves.sandwich.*
 import com.skydoves.sandwich.retry.RetryPolicy
 import com.skydoves.sandwich.retry.runAndRetry
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-const val NETWORK_PAGE_SIZE = 25
+const val NETWORK_PAGE_SIZE = 15
 
 class GameRepositoryImpl(
     val scope: CoroutineScope
@@ -117,10 +118,26 @@ class GameRepositoryImpl(
             }
         }.flowOn(Dispatchers.IO)
 
+    override suspend fun getGameInfo(gameId: Int): GameDetailInfo {
 
-    override fun getGameDetailInfo(): Game {
-        TODO("Not yet implemented")
+        val gameInfo = apiService.getGameInfo(gameId = gameId)
+        val series = apiService.getGameSeries(gameId = gameId)
+        val screen = apiService.getGameScreenshots(gameId = gameId)
+        val first = mapper.gameDtoToEntity(gameInfo.body()!!)
+        val second = screen.body()?.let {
+            mapper.listScreenDtoToEntity(it)
+        } ?: emptyList()
+        val third = series.body()?.let {
+            mapper.listGameDTOtoEntity(it.results)
+        } ?: emptyList()
+
+        return GameDetailInfo(
+            first, second, third
+        )
+
+
     }
+
 
 }
 

@@ -1,4 +1,4 @@
-package com.dauto.gamediscoveryapp.ui.dashboard
+package com.dauto.gamediscoveryapp.ui.favorite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
