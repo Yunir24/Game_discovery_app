@@ -4,8 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.dauto.gamediscoveryapp.databinding.GameItemBinding
 import com.dauto.gamediscoveryapp.domain.entity.Game
 import com.dauto.gamediscoveryapp.domain.entity.ParentPlatforms
-import java.util.*
 
 class GamerRecyclerView() :
     PagingDataAdapter<Game, GamerRecyclerView.GameViewHolder>(SimpleCallback()) {
@@ -24,6 +21,7 @@ class GamerRecyclerView() :
                 Glide
                     .with(context)
                     .load(it.backgroundImage)
+                    .centerCrop()
                     .into(binding.posterIV)
                 setIconVisibility(it)
             }
@@ -58,11 +56,24 @@ class GamerRecyclerView() :
 
     class SimpleCallback : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem == newItem
-        }
+            return oldItem.id == newItem.id
+        }/*
+        oldItem.released == newItem.released && oldItem.name == newItem.name || */
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem.id == newItem.id
+            return compare(oldItem,newItem)
+//                    && oldItem.name == newItem.name
+//                    && oldItem.released == newItem.released
+        }
+
+        private fun compare(game1: Game, game2: Game): Boolean{
+            return game1.id == game2.id &&
+             game1.description == game2.description &&
+             game1.name == game2.name &&
+             game1.released == game2.released &&
+             game1.backgroundImage == game2.backgroundImage &&
+             game1.rating == game2.rating &&
+             game1.ratingTop == game2.ratingTop
         }
     }
 

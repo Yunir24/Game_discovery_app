@@ -11,13 +11,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/posterIV"
-            android:layout_width="240dp"
+            android:layout_width="0dp"
             android:layout_height="240dp"
             android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toTopOf="@+id/platformsFlowContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,106 +28,119 @@
             android:layout_height="40dp"
             android:layout_margin="16dp"
             android:src="@drawable/favorite_40px"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/platformsFlowContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_margin="8dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/metacriticTv"
-            app:layout_constraintEnd_toStartOf="@id/metacriticTv"
+            android:padding="4dp"
+            app:constraint_referenced_ids="AndroidImage,IOSImage,PCImage,PSImage,MacImage,XBOXImage,LinuxImage,webImage,SegaImage,NintendoImage"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalGap="8dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalGap="4dp"
+            app:flow_wrapMode="chain"
+            app:layout_constraintBottom_toTopOf="@+id/nameGameTV"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/posterIV"
-            app:layout_constraintVertical_chainStyle="spread_inside" >
+            app:layout_constraintTop_toBottomOf="@+id/posterIV"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <ImageView
-                android:id="@+id/PCImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/windows_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/PCImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/windows_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/PSImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/playstation_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/PSImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/playstation_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/XBOXImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/xbox_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/XBOXImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/xbox_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/MacImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/macintosh_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/MacImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/macintosh_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/IOSImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/ios_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/IOSImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/ios_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/AndroidImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/android_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/AndroidImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/android_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/LinuxImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/linux_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/LinuxImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/linux_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/NintendoImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/nintendo_switch_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/NintendoImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/nintendo_switch_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/SegaImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/sega_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/SegaImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/sega_svgrepo_com" />
 
-            <ImageView
-                android:id="@+id/webImage"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_margin="4dp"
-                android:src="@drawable/web_svgrepo_com"/>
+        <ImageView
+            android:id="@+id/webImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_drawable"
+            android:src="@drawable/web_svgrepo_com" />
 
-        </LinearLayout>
 
         <TextView
             android:id="@+id/metacriticTv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
+            android:layout_margin="16dp"
             android:background="@drawable/metacritic_drawable"
-            android:padding="12dp"
-            app:layout_constraintBottom_toBottomOf="@id/platformsFlowContainer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/platformsFlowContainer"
-            app:layout_constraintTop_toBottomOf="@+id/posterIV"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="90.0" />
 
         <TextView
@@ -138,7 +152,8 @@
             android:text="@string/app_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/platformsFlowContainer" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/platformsFlowContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

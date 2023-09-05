@@ -5,20 +5,22 @@
     android:id="@+id/carousel_item_container"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:layout_marginStart="4dp"
-    android:layout_marginEnd="4dp"
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
+    android:layout_marginStart="1dp"
+    android:layout_marginEnd="1dp"
     android:foreground="?attr/selectableItemBackground"
     android:padding="12dp"
     app:shapeAppearance="?attr/shapeAppearanceCornerExtraLarge">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:cardCornerRadius="26dp">
 
         <ImageView
             android:id="@+id/imageViewCarousel"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="350dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />

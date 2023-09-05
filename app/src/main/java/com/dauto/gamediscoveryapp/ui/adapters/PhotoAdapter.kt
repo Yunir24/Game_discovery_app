@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dauto.gamediscoveryapp.databinding.GameImageItemBinding
-import com.dauto.gamediscoveryapp.domain.entity.Game
 
 class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     val listP = mutableListOf<String>()
+    var photoItemClickListener: ((Int) -> Unit)? = null
 
     class PhotoViewHolder(val binding: GameImageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -20,13 +20,17 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
             GameImageItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false)
+                false
+            )
         return PhotoViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val item = listP[position]
         with(holder) {
+            itemView.setOnClickListener {
+                photoItemClickListener?.invoke(position)
+            }
             Glide.with(holder.itemView.context).load(item).into(
                 binding.imageViewCarousel
             )

@@ -21,9 +21,9 @@ interface ApiService {
 
     @GET("/api/games")
     suspend fun getGameListByGenres(
-        @Query("key") key: String,
-        @Query("page_size") pageSize: Int,
-        @Query("genres") genres: String
+        @Query("key") key: String = KEY,
+        @Query("page_size") pageSize: Int = DEFAULT_PAGE_SIZE,
+        @Query("page") page: Int = DEFAULT_PAGE
     ): ApiResponse<ResultGameDto>
 
     @GET("/api/games")
@@ -39,6 +39,8 @@ interface ApiService {
         @Query("dates") yearsRange: String = YEARS,
         @Query("genres") genres: String = GENRES,
         @Query("platforms") platforms: String = PLATFORMS,
+        @Query("search") search: String = SEARCH,
+        @Query("search_precise") searchPrecise: Boolean = true,
         @Query("key") key: String = KEY,
         @Query("page_size") pageSize: Int = DEFAULT_PAGE_SIZE,
         @Query("page") page: Int = DEFAULT_PAGE
@@ -66,12 +68,13 @@ interface ApiService {
     ): Response<ResultGameDto>
 
     companion object {
-        private const val GENRES = "racing,shooter,action,indie,adventure,rpg,strategy,casual,simulation,puzzle,arcade,platformer,massivelymultiplayer, sports, fighting, educational, card, family"
-        private const val PLATFORMS = "1, 2, 3, 4, 8, 5, 6, 7, 11, 14"
-        private const val YEARS = "1960,2020"
+        const val GENRES = "racing,shooter,action,indie,adventure,rpg,strategy,casual,simulation,puzzle,arcade,platformer,massivelymultiplayer,sports,fighting,educational,card,family"
+        const val PLATFORMS = "1,2,3,4,8,5,6,7,11,14"
+        const val YEARS = "1960,2025"
         private const val KEY = "3219afc7b59647bf9ed8cba2971994d3"
+        const val SEARCH = ""
         private const val DEFAULT_PAGE = 1
-        const val DEFAULT_PAGE_SIZE = 10
-
+        const val DEFAULT_PAGE_SIZE = 30
+//search_precise search
     }
 }

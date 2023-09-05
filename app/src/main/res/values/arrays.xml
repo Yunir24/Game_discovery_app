@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="year_range">
-        <item>1960</item>
-        <item>2023</item>
+        <item>1970</item>
+        <item>2025</item>
     </array>
 </resources>

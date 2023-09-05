@@ -1,23 +1,24 @@
 package com.dauto.gamediscoveryapp.domain
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.dauto.gamediscoveryapp.domain.entity.Game
 import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
+import com.dauto.gamediscoveryapp.domain.entity.GameQuery
 import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
 
     suspend fun saveGameToLocal(game: Game)
     suspend fun deleteGameToLocal(id: Int)
-    fun getListOfGameToLocal(): Flow<Game>
+    fun getFavoriteGame(): Flow<Game>
 
-    fun getGameListByYear(): Flow<GameResult<Game>>
+    suspend fun getGameInfo(gameId: Int): GameResult<GameDetailInfo>
 
-    fun getGameListByGenres(): Flow<GameResult<Game>>
+    fun getFavoriteGameList(): LiveData<GameResult<List<Game>>>
 
-    fun getGameListPaging(): Flow<PagingData<Game>>
+    fun getGameListPaging(gameQuery: GameQuery): Flow<PagingData<Game>>
 
-    suspend fun getGameInfo(gameId: Int): GameDetailInfo
 
 /*
 * save delete game

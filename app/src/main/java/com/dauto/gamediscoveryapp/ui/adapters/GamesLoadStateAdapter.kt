@@ -1,5 +1,6 @@
 package com.dauto.gamediscoveryapp.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,8 @@ import com.dauto.gamediscoveryapp.databinding.ItemErrorBinding
 import com.dauto.gamediscoveryapp.databinding.ItemProgressBinding
 
 
-class GamesLoadStateAdapter() : LoadStateAdapter<GamesLoadStateAdapter.ItemViewHolder>() {
+class GamesLoadStateAdapter(private val retry: () -> Unit) :
+    LoadStateAdapter<GamesLoadStateAdapter.ItemViewHolder>() {
 
     override fun getStateViewType(loadState: LoadState) = when (loadState) {
         is LoadState.NotLoading -> error("Not supported")
@@ -24,9 +26,13 @@ class GamesLoadStateAdapter() : LoadStateAdapter<GamesLoadStateAdapter.ItemViewH
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): ItemViewHolder {
-        return when(loadState) {
+        return when (loadState) {
             LoadState.Loading -> ProgressViewHolder(LayoutInflater.from(parent.context), parent)
-            is LoadState.Error -> ErrorViewHolder(LayoutInflater.from(parent.context), parent)
+            is LoadState.Error -> ErrorViewHolder(
+                LayoutInflater.from(parent.context),
+                parent,
+                retry = retry
+            )
             is LoadState.NotLoading -> error("Not supported")
         }
     }
@@ -47,9 +53,7 @@ class GamesLoadStateAdapter() : LoadStateAdapter<GamesLoadStateAdapter.ItemViewH
     ) : ItemViewHolder(binding.root) {
 
         override fun bind(loadState: LoadState) {
-            // Do nothing
-//
-//            binding.footerProgressBar.isVisible= loadState == LoadState.Loading
+            // if we want logic later
         }
 
         companion object {
@@ -71,12 +75,20 @@ class GamesLoadStateAdapter() : LoadStateAdapter<GamesLoadStateAdapter.ItemViewH
     }
 
     class ErrorViewHolder internal constructor(
-        private val binding: ItemErrorBinding
+        private val binding: ItemErrorBinding, retryButton: () -> Unit
     ) : ItemViewHolder(binding.root) {
 
         override fun bind(loadState: LoadState) {
-            require(loadState is LoadState.Error)
-            binding.errorMessage.text = loadState.error.localizedMessage
+            if (loadState is LoadState.Error) {
+                binding.errorMessage.text = loadState.error.localizedMessage
+            }
+            binding.retryButton.isVisible = loadState is LoadState.Error
+        }
+
+        init {
+            binding.retryButton.setOnClickListener {
+                retryButton.invoke()
+            }
         }
 
         companion object {
@@ -84,14 +96,14 @@ class GamesLoadStateAdapter() : LoadStateAdapter<GamesLoadStateAdapter.ItemViewH
             operator fun invoke(
                 layoutInflater: LayoutInflater,
                 parent: ViewGroup? = null,
-                attachToRoot: Boolean = false
+                attachToRoot: Boolean = false, retry: () -> Unit
             ): ErrorViewHolder {
                 return ErrorViewHolder(
                     ItemErrorBinding.inflate(
                         layoutInflater,
                         parent,
                         attachToRoot
-                    )
+                    ), retry
                 )
             }
         }

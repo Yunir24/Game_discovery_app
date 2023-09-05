@@ -1,24 +1,20 @@
 package com.dauto.gamediscoveryapp.ui.gamedetail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.dauto.gamediscoveryapp.data.GameRepositoryImpl
-import com.dauto.gamediscoveryapp.domain.GameRepository
 import com.dauto.gamediscoveryapp.domain.GameResult
 import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.dauto.gamediscoveryapp.domain.usecase.GetGameInfoUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameDetailViewModel : ViewModel(){
+class GameDetailViewModel @Inject constructor(private val getUseCase: GetGameInfoUseCase) : ViewModel(){
 
-    private val repository = GameRepositoryImpl(viewModelScope)
-    private val getUseCase = GetGameInfoUseCase(repository)
 
-    private val _gameInfo = MutableLiveData<GameDetailInfo>( )
-    val gameInfo: LiveData<GameDetailInfo> = _gameInfo
+    private val _gameInfo = MutableLiveData<GameResult<GameDetailInfo>>(GameResult.Loading())
+    val gameInfo: LiveData<GameResult<GameDetailInfo>> = _gameInfo
 
 
     fun getFullInfo(gameId: Int){

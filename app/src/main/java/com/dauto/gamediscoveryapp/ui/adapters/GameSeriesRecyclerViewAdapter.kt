@@ -52,7 +52,5 @@ class GameSeriesRecyclerViewAdapter () :
         }
     }
 
-    class OnClickListener(val clickListener: (game: Game) -> Unit) {
-        fun onClick(game: Game) = clickListener(game)
-    }
+
 }

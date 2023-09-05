@@ -1,22 +1,23 @@
 package com.dauto.gamediscoveryapp.domain.usecase
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.dauto.gamediscoveryapp.domain.GameRepository
 import com.dauto.gamediscoveryapp.domain.GameResult
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.GameQuery
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetGameList( val gameRepository: GameRepository) {
+class GetGameList @Inject constructor(
+    private val gameRepository: GameRepository) {
 
-     fun getGameListByYear(): Flow<GameResult<Game>> {
-        return gameRepository.getGameListByYear()
+
+    fun getFavoriteGameList(): LiveData<GameResult<List<Game>>> {
+        return gameRepository.getFavoriteGameList()
     }
 
-    fun getGameListByGenres(): Flow<GameResult<Game>> {
-        return gameRepository.getGameListByGenres()
-    }
-
-    fun getGameListByPlatforms(): Flow<PagingData<Game>> {
-        return gameRepository.getGameListPaging()
+    fun getGameListByPaging(gameQuery: GameQuery): Flow<PagingData<Game>> {
+        return gameRepository.getGameListPaging(gameQuery)
     }
 }
