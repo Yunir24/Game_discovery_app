@@ -9,13 +9,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
 
-    suspend fun saveGameToLocal(game: Game)
+    suspend fun saveGameToLocal(gameDetail: GameDetailInfo)
+
     suspend fun deleteGameToLocal(id: Int)
-    fun getFavoriteGame(): Flow<Game>
+
+    fun getExistFavoriteGame(id:Int): LiveData<Boolean>
 
     suspend fun getGameInfo(gameId: Int): GameResult<GameDetailInfo>
 
-    fun getFavoriteGameList(): LiveData<GameResult<List<Game>>>
+    fun getFavoriteGameList(): LiveData<List<GameDetailInfo>>
 
     fun getGameListPaging(gameQuery: GameQuery): Flow<PagingData<Game>>
 

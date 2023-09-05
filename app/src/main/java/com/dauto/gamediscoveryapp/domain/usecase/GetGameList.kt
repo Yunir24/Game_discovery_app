@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import com.dauto.gamediscoveryapp.domain.GameRepository
 import com.dauto.gamediscoveryapp.domain.GameResult
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.dauto.gamediscoveryapp.domain.entity.GameQuery
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,7 +14,7 @@ class GetGameList @Inject constructor(
     private val gameRepository: GameRepository) {
 
 
-    fun getFavoriteGameList(): LiveData<GameResult<List<Game>>> {
+    fun getFavoriteGameList(): LiveData<List<GameDetailInfo>> {
         return gameRepository.getFavoriteGameList()
     }
 

@@ -3,8 +3,6 @@ package com.dauto.gamediscoveryapp.data.network
 import com.dauto.gamediscoveryapp.data.network.dto.GameDTO
 import com.dauto.gamediscoveryapp.data.network.dto.ResultGameDto
 import com.dauto.gamediscoveryapp.data.network.dto.ResultScreenshotsDto
-import com.skydoves.sandwich.ApiResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -19,19 +17,6 @@ interface ApiService {
         @Query("page_size") pageSize: Int
     ): Response<ResultGameDto>
 
-    @GET("/api/games")
-    suspend fun getGameListByGenres(
-        @Query("key") key: String = KEY,
-        @Query("page_size") pageSize: Int = DEFAULT_PAGE_SIZE,
-        @Query("page") page: Int = DEFAULT_PAGE
-    ): ApiResponse<ResultGameDto>
-
-    @GET("/api/games")
-    suspend fun getGameListByPlatforms(
-        @Query("key") key: String,
-        @Query("page_size") pageSize: Int,
-        @Query("platforms") platforms: String
-    ): ApiResponse<ResultGameDto>
 
 
     @GET("/api/games")

@@ -1,4 +1,4 @@
-package com.dauto.gamediscoveryapp.data.local.dbmodel.favorite
+package com.dauto.gamediscoveryapp.data.local.dbmodel
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

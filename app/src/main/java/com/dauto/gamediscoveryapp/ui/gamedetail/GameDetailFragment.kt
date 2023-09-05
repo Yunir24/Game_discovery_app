@@ -152,11 +152,28 @@ class GameDetailFragment : Fragment() {
         }
     }
 
-    private fun getImage(game: Game) {
-
-        val favoriteOff = ContextCompat.getDrawable(requireContext(), R.drawable.favorite_40px)
-        val favoriteOn = ContextCompat.getDrawable(requireContext(), R.drawable.unfavorite_40px)
-
+    private fun getImage(game: GameDetailInfo) {
+        gameDetailViewModel.getGameFromDb(game.game.id).observe(viewLifecycleOwner){exist->
+            if (exist){
+                val favoriteOn =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.unfavorite_40px)
+                with(binding.favoriteButton){
+                    setImageDrawable(favoriteOn)
+                    setOnClickListener {
+                        gameDetailViewModel.deleteGame(game.game.id)
+                    }
+                }
+            }else{
+                val favoriteOff =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.favorite_40px)
+                with(binding.favoriteButton){
+                    setImageDrawable(favoriteOff)
+                    setOnClickListener {
+                        gameDetailViewModel.saveGame(game)
+                    }
+                }
+            }
+        }
     }
 
     private fun initViews(gameDetailInfo: GameDetailInfo) {
@@ -172,6 +189,7 @@ class GameDetailFragment : Fragment() {
                 gameDescriptionTextView.text = gameDetailInfo.game.description
             }
             isViewInitial = true
+            getImage(gameDetailInfo)
             val sers = gameDetailInfo.gameSeries
             setupSeriesAdapters(sers)
         }

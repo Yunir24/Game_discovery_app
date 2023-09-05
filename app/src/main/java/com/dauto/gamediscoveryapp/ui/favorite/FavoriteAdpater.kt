@@ -10,18 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dauto.gamediscoveryapp.databinding.GameItemBinding
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.dauto.gamediscoveryapp.domain.entity.ParentPlatforms
 
 
-class FavoriteAdpater() :
-    ListAdapter<Game, FavoriteAdpater.GameViewHolder>(SimpleCallback()) {
+class FavoriteAdpater :
+    ListAdapter<GameDetailInfo, FavoriteAdpater.GameViewHolder>(SimpleCallback()) {
     class GameViewHolder(val binding: GameItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(game: Game?, context: Context) {
-            game?.let { it ->
+        fun bind(game: GameDetailInfo?, context: Context) {
+            game?.game?.let { it ->
                 binding.nameGameTV.text = it.name
                 Glide
                     .with(context)
                     .load(it.backgroundImage)
+                    .centerCrop()
                     .into(binding.posterIV)
                 setIconVisibility(it)
             }
@@ -52,14 +54,14 @@ class FavoriteAdpater() :
         }
     }
 
-    var gameItemClickListener: ((Game) -> Unit)? = null
+    var gameItemClickListener: ((GameDetailInfo) -> Unit)? = null
 
-    class SimpleCallback : DiffUtil.ItemCallback<Game>() {
-        override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
-            return oldItem.id == newItem.id && newItem.name == oldItem.name
+    class SimpleCallback : DiffUtil.ItemCallback<GameDetailInfo>() {
+        override fun areItemsTheSame(oldItem: GameDetailInfo, newItem: GameDetailInfo): Boolean {
+            return oldItem.game.id == newItem.game.id && newItem.game.name == oldItem.game.name
         }
 
-        override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
+        override fun areContentsTheSame(oldItem: GameDetailInfo, newItem: GameDetailInfo): Boolean {
             return oldItem == newItem
         }
     }

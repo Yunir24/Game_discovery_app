@@ -27,10 +27,6 @@ data class GameDTO(
     @SerialName("rating_top")
     val ratingTop: Double=1.0,
 
-
-    @SerialName("metacritic")
-    val metacritic: Int? = 0,
-
     @SerialName("parent_platforms")
     val platforms: List<PlatformsDto>,
 

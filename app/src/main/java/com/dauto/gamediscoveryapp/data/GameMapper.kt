@@ -1,15 +1,17 @@
 package com.dauto.gamediscoveryapp.data
 
-import com.dauto.gamediscoveryapp.data.local.dbmodel.GameDbModel
-import com.dauto.gamediscoveryapp.data.local.dbmodel.GenresDbModel
-import com.dauto.gamediscoveryapp.data.local.dbmodel.PagingGameDbModel
-import com.dauto.gamediscoveryapp.data.local.dbmodel.PlatformsDbModel
-import com.dauto.gamediscoveryapp.data.network.dto.*
+import com.dauto.gamediscoveryapp.data.local.dbmodel.*
+import com.dauto.gamediscoveryapp.data.network.dto.GameDTO
+import com.dauto.gamediscoveryapp.data.network.dto.GenresStringList
+import com.dauto.gamediscoveryapp.data.network.dto.PlatformsDto
+import com.dauto.gamediscoveryapp.data.network.dto.ResultScreenshotsDto
 import com.dauto.gamediscoveryapp.domain.entity.Game
+import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.dauto.gamediscoveryapp.domain.entity.ParentPlatforms
 import javax.inject.Inject
 
 class GameMapper @Inject constructor() {
+
     fun gameDtoToEntity(gameDTO: GameDTO) =
         Game(
             id = gameDTO.id,
@@ -19,15 +21,14 @@ class GameMapper @Inject constructor() {
             backgroundImage = gameDTO.backgroundImage,
             rating = gameDTO.rating,
             ratingTop = gameDTO.ratingTop,
-            metacritic = gameDTO.metacritic.toString(),
-            platforms = mapPlatformsList(gameDTO.platforms),
-            genres = mapGenresList(gameDTO.genres)
+            platforms = mapPlatformsListToEntity(gameDTO.platforms),
+            genres = mapGenresListToEntity(gameDTO.genres)
         )
 
 
-    fun gameDbModelToEntity(pagingGameDbModel: PagingGameDbModel): Game {
-        val gameDb = pagingGameDbModel.gameDbModel
-        return com.dauto.gamediscoveryapp.domain.entity.Game(
+    fun gameDbModelToEntity(favoriteFullGameInfoDbModel: FavoriteFullGameInfoDbModel): GameDetailInfo {
+        val gameDb = favoriteFullGameInfoDbModel.favoriteGameDbModel
+        val game = Game(
             id = gameDb.id,
             name = gameDb.name,
             description = gameDb.description,
@@ -35,29 +36,47 @@ class GameMapper @Inject constructor() {
             backgroundImage = gameDb.backgroundImage,
             rating = gameDb.rating,
             ratingTop = gameDb.ratingTop,
-            metacritic = gameDb.metacritic.toString(),
-            platforms = platformsDbToEntity(pagingGameDbModel.platformList),
-            genres = genresDbToEntity(pagingGameDbModel.genresList)
+            platforms = platformsDbToEntity(favoriteFullGameInfoDbModel.listPlatforms),
+            genres = genresDbToEntity(favoriteFullGameInfoDbModel.listGenres)
+        )
+        val screenList = gameDbPhotoToEntity(favoriteFullGameInfoDbModel.listImageList)
+        return GameDetailInfo(
+            game = game,
+            screenshotsList = screenList,
+            gameSeries = emptyList()
         )
     }
 
-    fun gameDtoToDbModel(gameDTO: GameDTO): PagingGameDbModel {
-        val game = GameDbModel(
-            id = gameDTO.id,
-            name = gameDTO.name,
-            description = gameDTO.description,
-            released = gameDTO.released,
-            backgroundImage = gameDTO.backgroundImage,
-            rating = gameDTO.rating,
-            ratingTop = gameDTO.ratingTop,
-            metacritic = gameDTO.metacritic ?: 1
+    fun gameEntityToDbModel(gameDetailInfo: GameDetailInfo): FavoriteFullGameInfoDbModel {
+        val gameDb = gameDetailInfo.game
+        val game = FavoriteGameDbModel(
+            id = gameDb.id,
+            name = gameDb.name,
+            description = gameDb.description,
+            released = gameDb.released,
+            backgroundImage = gameDb.backgroundImage,
+            rating = gameDb.rating,
+            ratingTop = gameDb.ratingTop,
         )
-        return PagingGameDbModel(
-            gameDbModel = game,
-            genresList = genresDtoToDb(gameDTO.genres, game.id),
-            platformList = platformsDtoToDb(gameDTO.platforms, game.id)
+        val screen = gameEntityPhotoToDbModel(gameDetailInfo.screenshotsList, gameDb.id)
+        return FavoriteFullGameInfoDbModel(
+            favoriteGameDbModel = game,
+            listGenres = genresEntityToDb(gameDb.genres, game.id),
+            listPlatforms = platformsEntityToDb(gameDb.platforms, game.id),
+            listImageList = screen
         )
     }
+
+
+    fun listGameEntityToDbModel(listDto: List<GameDetailInfo>): List<FavoriteFullGameInfoDbModel> =
+        listDto.map { gameEntityToDbModel(it) }
+
+    fun listGameDTOtoEntity(listDto: List<GameDTO>): List<Game> =
+        listDto.map { gameDtoToEntity(it) }
+
+    fun listGameDbModelToEntity(listGameDb: List<FavoriteFullGameInfoDbModel>): List<GameDetailInfo> =
+        listGameDb.map { gameDbModelToEntity(it) }
+
 
     private fun platformsDbToEntity(platformsDbModel: List<PlatformsDbModel>): List<ParentPlatforms> {
         val list = mutableListOf<ParentPlatforms>()
@@ -71,51 +90,41 @@ class GameMapper @Inject constructor() {
         return list.toList()
     }
 
-    private fun genresDbToEntity(genresDbModel: List<GenresDbModel>) =
+    private fun genresDbToEntity(genresDbModel: List<FavoriteGenresDbModel>) =
         genresDbModel.map { it.genres }
 
-    private fun platformsDtoToDb(
-        platformsList: List<PlatformsDto>,
+    private fun platformsEntityToDb(
+        platformsList: List<ParentPlatforms>,
         id: Int
     ): List<PlatformsDbModel> {
         val listDbModel = mutableListOf<PlatformsDbModel>()
         platformsList.forEach {
             listDbModel.add(
                 PlatformsDbModel(
-                    id = 0,
                     gameId = id,
-                    platformName = it.platform.name
+                    platformName = it.name
                 )
             )
         }
         return listDbModel
     }
 
-    private fun genresDtoToDb(
-        genresList: List<GenresStringList>,
+    private fun genresEntityToDb(
+        genresList: List<String>,
         id: Int
-    ): List<GenresDbModel> {
-        val listDbModel = mutableListOf<GenresDbModel>()
+    ): List<FavoriteGenresDbModel> {
+        val listDbModel = mutableListOf<FavoriteGenresDbModel>()
         genresList.forEach {
             listDbModel.add(
-                GenresDbModel(
-                    id = 0,
+                FavoriteGenresDbModel(
                     gameId = id,
-                    genres = it.name
+                    genres = it
                 )
             )
         }
         return listDbModel
     }
 
-    fun listGameDtoToDbModel(listDto: List<GameDTO>): List<PagingGameDbModel> =
-        listDto.map { gameDtoToDbModel(it) }
-
-    fun listGameDTOtoEntity(listDto: List<GameDTO>): List<com.dauto.gamediscoveryapp.domain.entity.Game> =
-        listDto.map { gameDtoToEntity(it) }
-
-    fun listGameDbModelToEntity(listGameDb: List<PagingGameDbModel>) : List<com.dauto.gamediscoveryapp.domain.entity.Game> =
-        listGameDb.map { gameDbModelToEntity(it) }
 
     fun listScreenDtoToEntity(screenshotsDto: ResultScreenshotsDto) =
         screenshotsDto.screenshotList.map {
@@ -123,7 +132,7 @@ class GameMapper @Inject constructor() {
         }
 
 
-    private fun mapGenresList(genresStringList: List<GenresStringList>): List<String> {
+    private fun mapGenresListToEntity(genresStringList: List<GenresStringList>): List<String> {
         val list = mutableListOf<String>()
         for (genres in genresStringList) {
             list.add(genres.name)
@@ -131,7 +140,7 @@ class GameMapper @Inject constructor() {
         return list.toList()
     }
 
-    private fun mapPlatformsList(platformsList: List<PlatformsDto>): List<ParentPlatforms> {
+    private fun mapPlatformsListToEntity(platformsList: List<PlatformsDto>): List<ParentPlatforms> {
         val list = mutableListOf<ParentPlatforms>()
         val parentList = ParentPlatforms.values().map { it.name.lowercase() }
         platformsList.forEach {
@@ -142,5 +151,23 @@ class GameMapper @Inject constructor() {
         }
 
         return list.toList()
+    }
+
+
+    private fun gameDbPhotoToEntity(list: List<FavoriteImageDbModel>) = list.map { it.imageUri }
+    private fun gameEntityPhotoToDbModel(
+        listPhoto: List<String>,
+        id: Int
+    ): List<FavoriteImageDbModel> {
+        val list = mutableListOf<FavoriteImageDbModel>()
+        listPhoto.forEach {
+            list.add(
+                FavoriteImageDbModel(
+                    gameId = id,
+                    imageUri = it
+                )
+            )
+        }
+        return list
     }
 }

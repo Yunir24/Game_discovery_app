@@ -1,4 +1,4 @@
-package com.dauto.gamediscoveryapp.data.local.dbmodel.favorite
+package com.dauto.gamediscoveryapp.data.local.dbmodel
 
 import androidx.room.*
 
@@ -25,7 +25,5 @@ data class FavoriteGameDbModel(
     @ColumnInfo("rating_top")
     val ratingTop: Double,
 
-    @ColumnInfo("metacritic")
-    val metacritic: Int
 
 )

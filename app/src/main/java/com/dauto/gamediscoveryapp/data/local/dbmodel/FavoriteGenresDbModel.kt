@@ -5,12 +5,11 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "genres_table",
-    indices = [Index("game_id")]
-)
-data class GenresDbModel (
+@Entity(tableName = "favorite_genres",
+    indices = [Index("game_id")])
+data class FavoriteGenresDbModel
+    (
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("genres_id")
     var id: Int = 0,
 
     @ColumnInfo(name = "game_id")
@@ -18,4 +17,4 @@ data class GenresDbModel (
 
     @ColumnInfo(name = "genres")
     val genres: String
-        )
+            )
