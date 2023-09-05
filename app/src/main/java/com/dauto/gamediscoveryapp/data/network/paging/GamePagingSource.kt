@@ -7,11 +7,9 @@ import com.dauto.gamediscoveryapp.data.network.dto.GameDTO
 import com.dauto.gamediscoveryapp.domain.entity.GameQuery
 import com.dauto.gamediscoveryapp.domain.entity.Genres
 import com.dauto.gamediscoveryapp.domain.entity.ParentPlatforms
-import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.io.IOException
 import java.lang.Integer.max
-import javax.inject.Inject
 
 private const val START_PAGE = 1
 
@@ -24,8 +22,7 @@ class GamePagingSource (
     override fun getRefreshKey(state: PagingState<Int, GameDTO>): Int? {
         val anchorPosition = state.anchorPosition ?: return null
         val anchorPage = state.closestPageToPosition(anchorPosition) ?: return null
-        val x = anchorPage.prevKey?.plus(1) ?: anchorPage.nextKey?.minus(1)
-        return x
+        return anchorPage.prevKey?.plus(1) ?: anchorPage.nextKey?.minus(1)
     }
 
 

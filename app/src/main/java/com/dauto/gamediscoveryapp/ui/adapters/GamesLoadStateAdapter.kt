@@ -1,6 +1,5 @@
 package com.dauto.gamediscoveryapp.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

@@ -19,6 +19,7 @@ import com.dauto.gamediscoveryapp.data.local.dbmodel.PlatformsDbModel
     ], version = 2, exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun favoriteGameDao(): FavoriteGameDao
 
 

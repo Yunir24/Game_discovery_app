@@ -57,13 +57,10 @@ class GamerRecyclerView() :
     class SimpleCallback : DiffUtil.ItemCallback<Game>() {
         override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
             return oldItem.id == newItem.id
-        }/*
-        oldItem.released == newItem.released && oldItem.name == newItem.name || */
+        }
 
         override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
             return compare(oldItem,newItem)
-//                    && oldItem.name == newItem.name
-//                    && oldItem.released == newItem.released
         }
 
         private fun compare(game1: Game, game2: Game): Boolean{

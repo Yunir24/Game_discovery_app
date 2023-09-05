@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -88,6 +85,26 @@ class GameDetailFragment : Fragment() {
         }
     }
 
+    private fun initViews(gameDetailInfo: GameDetailInfo) {
+        with(binding) {
+            gameNameTextView.text = gameDetailInfo.game.name
+            gameReleasedTextView.text = gameDetailInfo.game.released
+            val genres = gameDetailInfo.game.genres
+            setupScreenListAdapter(gameDetailInfo)
+            dynamicAddGenresIntoFlow(genres)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                gameDescriptionTextView.text = gameDetailInfo.game.description.htmlParse()
+            } else {
+                gameDescriptionTextView.text = gameDetailInfo.game.description
+            }
+            isViewInitial = true
+            initFavoriteSettings(gameDetailInfo)
+            val sers = gameDetailInfo.gameSeries
+            setupSeriesAdapters(sers)
+        }
+    }
+
+
     private fun showProgressBar() {
         with(binding) {
             progressBar.setVisible()
@@ -134,7 +151,7 @@ class GameDetailFragment : Fragment() {
 
     private fun setupSeriesAdapters(gameList: List<Game>) {
         if (gameList.isEmpty()) {
-            with(binding){
+            with(binding) {
                 dividerGameSeries.setInvisible()
                 gameSeriesTitle.setInvisible()
                 gameSeriesRcView.setInvisible()
@@ -152,46 +169,27 @@ class GameDetailFragment : Fragment() {
         }
     }
 
-    private fun getImage(game: GameDetailInfo) {
-        gameDetailViewModel.getGameFromDb(game.game.id).observe(viewLifecycleOwner){exist->
-            if (exist){
+    private fun initFavoriteSettings(game: GameDetailInfo) {
+        gameDetailViewModel.getGameFromDb(game.game.id).observe(viewLifecycleOwner) { exist ->
+            if (exist) {
                 val favoriteOn =
                     ContextCompat.getDrawable(requireContext(), R.drawable.unfavorite_40px)
-                with(binding.favoriteButton){
+                with(binding.favoriteButton) {
                     setImageDrawable(favoriteOn)
                     setOnClickListener {
                         gameDetailViewModel.deleteGame(game.game.id)
                     }
                 }
-            }else{
+            } else {
                 val favoriteOff =
                     ContextCompat.getDrawable(requireContext(), R.drawable.favorite_40px)
-                with(binding.favoriteButton){
+                with(binding.favoriteButton) {
                     setImageDrawable(favoriteOff)
                     setOnClickListener {
                         gameDetailViewModel.saveGame(game)
                     }
                 }
             }
-        }
-    }
-
-    private fun initViews(gameDetailInfo: GameDetailInfo) {
-        with(binding) {
-            gameNameTextView.text = gameDetailInfo.game.name
-            gameReleasedTextView.text = gameDetailInfo.game.released
-            val genres = gameDetailInfo.game.genres
-            setupScreenListAdapter(gameDetailInfo)
-            dynamicAddGenresIntoFlow(genres)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                gameDescriptionTextView.text = gameDetailInfo.game.description.htmlParse()
-            } else {
-                gameDescriptionTextView.text = gameDetailInfo.game.description
-            }
-            isViewInitial = true
-            getImage(gameDetailInfo)
-            val sers = gameDetailInfo.gameSeries
-            setupSeriesAdapters(sers)
         }
     }
 
@@ -246,23 +244,3 @@ class GameDetailFragment : Fragment() {
 @RequiresApi(Build.VERSION_CODES.N)
 fun String.htmlParse() =
     Html.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-/*viewModel.getFavouriteMovie(movie.getId()).observe(this, movieFromDB -> {
-            if(movieFromDB == null){
-                    starImage.setImageDrawable(starOff);
-                    starImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            viewModel.insertMovie(movie);
-                        }
-                    });
-            } else{
-                starImage.setImageDrawable(starOn);
-                starImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        viewModel.removeMovie(movie.getId());
-                    }
-                });
-
-            }
-        });*/

@@ -21,14 +21,4 @@ interface GameRepository {
 
     fun getGameListPaging(gameQuery: GameQuery): Flow<PagingData<Game>>
 
-
-/*
-* save delete game
-*
-* load gamelist
-*
-* load gameifo
-* load gamePhoto
-* load gameSeries
-* */
 }

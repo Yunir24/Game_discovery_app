@@ -12,14 +12,6 @@ interface ApiService {
 
 
     @GET("/api/games")
-    suspend fun getGameList(
-        @Query("key") key: String,
-        @Query("page_size") pageSize: Int
-    ): Response<ResultGameDto>
-
-
-
-    @GET("/api/games")
     suspend fun getCallGameList(
         @Query("dates") yearsRange: String = YEARS,
         @Query("genres") genres: String = GENRES,
@@ -60,6 +52,5 @@ interface ApiService {
         const val SEARCH = ""
         private const val DEFAULT_PAGE = 1
         const val DEFAULT_PAGE_SIZE = 30
-//search_precise search
     }
 }

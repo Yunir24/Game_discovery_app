@@ -13,4 +13,4 @@ enum class ParentPlatforms(val id: Int, val imageId: Int) {
     NINTENDO(7,R.drawable.nintendo_switch_svgrepo_com),
     SEGA(11,R.drawable.sega_svgrepo_com),
     WEB(14,R.drawable.web_svgrepo_com)
-}//1, 2, 3, 4, 8, 5, 6, 7, 11, 14
+}

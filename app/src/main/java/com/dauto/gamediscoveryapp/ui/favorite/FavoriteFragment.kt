@@ -2,7 +2,6 @@ package com.dauto.gamediscoveryapp.ui.favorite
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,6 @@ class FavoriteFragment : Fragment() {
     private val binding get() = _binding!!
     private val favoriteAdapter = FavoriteAdpater()
 
-
     private val favoriteViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[FavoriteViewModel::class.java]
     }
@@ -43,13 +41,8 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        Log.e("hometest", "favorite fragment " + favoriteViewModel.toString())
-        Log.e("hometest", "favorite fragment " + viewModelFactory.toString())
-        return root
+        return binding.root
     }
 
 
@@ -64,36 +57,11 @@ class FavoriteFragment : Fragment() {
                 )
             )
         }
-
-        favoriteViewModel.hetList().observe(viewLifecycleOwner) { gameResult ->
+        favoriteViewModel.getList().observe(viewLifecycleOwner) { gameResult ->
             favoriteAdapter.submitList(gameResult)
         }
 
     }
-
-
-//        binding.inputLayout.addOnEditTextAttachedListener { object : TextWatcher{
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//                if (s.isNullOrEmpty()) {
-//                    // hide keyboard
-//                    val inputMethodManager = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
-//                    inputMethodManager?.hideSoftInputFromWindow(binding.editTextInput.windowToken, 0)
-//                    // remove focus
-//                    binding.editTextInput.clearFocus()
-//                }
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                if((s?.length ?: 0) > 2){
-//                    Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//
-//            }
-//
-//        } }
 
 
     override fun onDestroyView() {

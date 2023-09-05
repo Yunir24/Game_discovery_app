@@ -16,4 +16,5 @@
     <string name="search_hint">Search</string>
     <string name="released_title">Released:</string>
     <string name="favorite_button_cont_desc">Favorite button</string>
+    <string name="favorite_menu_tittle">Favorite</string>
 </resources>

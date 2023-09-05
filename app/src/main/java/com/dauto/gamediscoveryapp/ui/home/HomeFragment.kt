@@ -2,7 +2,6 @@ package com.dauto.gamediscoveryapp.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -49,43 +48,9 @@ class HomeFragment : Fragment() {
     }
 
 
-//    @Inject
-//    lateinit var viewModelFactory: ViewModelFactory
-
-//    private val args by navArgs<HomeFragmentArgs>()
-
-    //    private lateinit var homeViewModel: HomeViewModel
-//    private var gameQuery = GameQuery(
-//        null,
-//        null,
-//        null,
-//        null,
-//    )
-
-//    private fun parseQueryFromArgs() {
-//        val year = if ((args.years).equals(" ")) null else args.years
-//        val genr = if ((args.genres).equals(" ")) null else args.genres
-//        val plat = if ((args.platforms).equals(" ")) null else args.platforms
-//        gameQuery = gameQuery.copy(
-//            date = year,
-//            genres = genr,
-//            platforms = plat
-//        )
-//    }
-
-
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        val factory = abst.create(requireActivity(), null)
-//        homeViewModel = ViewModelProvider(requireActivity(), factory)[HomeViewModel::class.java]
-
-        Log.e("hometest ", "home frag" + factory.toString())
-//        parseQueryFromArgs()
     }
 
     override fun onCreateView(
@@ -100,21 +65,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.e("hometest", "this home fragment $homeViewModel")
-        Log.e("hometest", "this home fragment ${requireActivity()}")
-//        Log.e("hometest", "this home fragment $viewModelFactory")
         binding.bindState(
             uiState = homeViewModel.state,
             pagingData = homeViewModel.pagingData,
             uiAction = homeViewModel.accept
         )
-
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            homeViewModel.getGameByPlatforms(null).collectLatest(adapterGame::submitData)
-//        }
-
-
     }
 
 
@@ -214,7 +169,6 @@ class HomeFragment : Fragment() {
     }
 
 
-
     private fun FragmentHomeBinding.bindQuery(
         uiState: StateFlow<UIState>,
         onQueryChanged: (UIAction.Search) -> Unit
@@ -235,12 +189,6 @@ class HomeFragment : Fragment() {
                 editTextInput.text.trim().let {
                     if (it.isNotEmpty()) {
                         updateQueryFromInput(it)
-//                        val gameQuery = uiState.value.query.copy(searchQuery = it.toString())
-//                        onQueryChanged(
-//                            UIAction.Search(
-//                                query = gameQuery
-//                            )
-//                        )
                     }
                 }
                 true
@@ -251,12 +199,6 @@ class HomeFragment : Fragment() {
         }
         inputLayout.setEndIconOnClickListener {
             updateQueryFromInput(null)
-//            val gameQuery = uiState.value.query.copy(searchQuery = null)
-//            onQueryChanged(
-//                UIAction.Search(
-//                    query = gameQuery
-//                )
-//            )
         }
         editTextInput.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -265,12 +207,6 @@ class HomeFragment : Fragment() {
                         updateQueryFromInput(
                             it
                         )
-//                        gameQuery = gameQuery.copy(searchQuery = it.toString())
-//                        onQueryChanged(
-//                            UIAction.Search(
-//                                query = gameQuery
-//                            )
-//                        )
                     }
                 }
                 true

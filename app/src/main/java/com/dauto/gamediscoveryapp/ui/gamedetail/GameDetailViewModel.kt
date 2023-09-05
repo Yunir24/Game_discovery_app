@@ -1,8 +1,9 @@
 package com.dauto.gamediscoveryapp.ui.gamedetail
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.dauto.gamediscoveryapp.data.GameRepositoryImpl
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dauto.gamediscoveryapp.domain.GameResult
 import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.dauto.gamediscoveryapp.domain.usecase.GetGameInfoUseCase
@@ -16,10 +17,6 @@ class GameDetailViewModel @Inject constructor(private val getUseCase: GetGameInf
 
     private val _gameInfo = MutableLiveData<GameResult<GameDetailInfo>>(GameResult.Loading())
     val gameInfo: LiveData<GameResult<GameDetailInfo>> = _gameInfo
-
-    private val _gameExist = MutableLiveData<Boolean>()
-    val gameExist: LiveData<Boolean> = _gameExist
-
 
     fun getFullInfo(gameId: Int){
         viewModelScope.launch(dispatcher) {

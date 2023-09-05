@@ -9,8 +9,10 @@ import retrofit2.Retrofit
 object ApiFactory {
     val contentType = "application/json".toMediaType()
 
-    private val json = Json { ignoreUnknownKeys = true
-   coerceInputValues = true}
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
 
 
     private val retrofit = Retrofit.Builder()
@@ -19,5 +21,5 @@ object ApiFactory {
         .build()
 
     // Create Service
-    val service = retrofit.create(ApiService::class.java)
+    val service: ApiService = retrofit.create(ApiService::class.java)
 }

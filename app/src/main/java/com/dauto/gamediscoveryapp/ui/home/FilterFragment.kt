@@ -2,11 +2,10 @@ package com.dauto.gamediscoveryapp.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -21,9 +20,6 @@ import com.dauto.gamediscoveryapp.domain.entity.ParentPlatforms
 import com.dauto.gamediscoveryapp.ui.utils.getAppComponent
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.RangeSlider
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,7 +36,6 @@ class FilterFragment : Fragment() {
     @Inject
     lateinit var abst: InjectingSavedStateViewModelFactory
 
-    //    private lateinit var homeViewModel: HomeViewModel
     private val component by lazy {
         getAppComponent()
     }
@@ -50,13 +45,7 @@ class FilterFragment : Fragment() {
     private val homeViewModel by lazy {
         ViewModelProvider(requireActivity(), factory)[HomeViewModel::class.java]
     }
-//
-//    @Inject
-//    lateinit var viewModelFactory: ViewModelFactory
 
-//    private val homeViewModel by lazy {
-//        ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
-//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -69,11 +58,6 @@ class FilterFragment : Fragment() {
     private var platformsList: MutableSet<ParentPlatforms> = mutableSetOf()
     private var yearRange: MutableList<Float> = mutableListOf()
     private var queryString: String? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,6 +80,16 @@ class FilterFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.bindConfirmSettings(
+            uiAction = homeViewModel.accept
+        )
+        initGenresChipsSettings()
+        initPlatformsChipsSetting()
+        clearSettings()
+    }
+
     private fun clearSettings() {
         binding.clearTV.setOnClickListener {
             binding.chipsGenresContainer.clearCheck()
@@ -108,17 +102,6 @@ class FilterFragment : Fragment() {
 
     }
 
-
-    private fun collectQueryListToString(queryList: List<String>): String {
-        val stringCollector = StringBuilder()
-        queryList.forEach {
-            stringCollector.append(it)
-            stringCollector.append(",")
-        }
-        stringCollector.deleteAt(stringCollector.length - 1)
-        return stringCollector.toString()
-    }
-
     private fun initRangeSliderSettings(yearRangeList: List<Float>) {
         val initialStart = if (yearRangeList.isEmpty()) 1970.0F else yearRangeList[0]
         val initialEnd = if (yearRangeList.isEmpty()) 2025.0F else yearRangeList[1]
@@ -127,7 +110,6 @@ class FilterFragment : Fragment() {
             override fun onStartTrackingTouch(slider: RangeSlider) {
 
             }
-
             override fun onStopTrackingTouch(slider: RangeSlider) {
                 val value = slider.values
                 val start = value[0]
@@ -193,49 +175,23 @@ class FilterFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.bindState(
-            uiState = homeViewModel.state,
-            uiAction = homeViewModel.accept
-        )
-
-        initGenresChipsSettings()
-        initPlatformsChipsSetting()
-
-        Log.e("hometest ", "filter frag" + homeViewModel.toString())
-        Log.e("hometest ", "filter frag" + factory.toString())
-        Log.e("hometest ", "filter frag" + requireActivity().toString())
-        clearSettings()
-
-
-    }
-
     private fun initCollectors(gameQuery: GameQuery) {
         genresList = gameQuery.genres.toMutableSet()
         platformsList = gameQuery.platforms.toMutableSet()
         yearRange = gameQuery.date.toMutableList()
-        Log.e("hashCode ", genresList.toString())
-        Log.e("hashCode ", genresList.hashCode().toString())
-        Log.e("hashCode ", gameQuery.genres.toString())
-        Log.e("hashCode ", gameQuery.genres.hashCode().toString())
         genresChipsList.forEach {
             it.isChecked = genresList.contains(Genres.valueOf(it.text.toString()))
         }
         platformChipsList.forEach {
             it.isChecked = platformsList.contains(ParentPlatforms.valueOf(it.text.toString()))
         }
-
         initRangeSliderSettings(yearRange)
         queryString = gameQuery.searchQuery
     }
 
-    private fun FragmentFilterBinding.bindState(
-        uiState: StateFlow<UIState>,
+    private fun FragmentFilterBinding.bindConfirmSettings(
         uiAction: (UIAction) -> Unit
     ) {
-
-
         confirmButton.setOnClickListener {
             uiAction(
                 UIAction.Search(
@@ -243,7 +199,6 @@ class FilterFragment : Fragment() {
                 )
             )
             findNavController().popBackStack()
-//            findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToNavigationHome())
         }
     }
 
@@ -257,7 +212,6 @@ class FilterFragment : Fragment() {
 
     override fun onDestroy() {
         _binding = null
-        Log.e("hashCode ", "on destroy")
         super.onDestroy()
     }
 }

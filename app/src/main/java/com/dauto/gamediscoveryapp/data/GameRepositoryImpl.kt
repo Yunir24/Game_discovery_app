@@ -7,7 +7,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.dauto.gamediscoveryapp.data.local.AppDatabase
-import com.dauto.gamediscoveryapp.data.local.dbmodel.FavoriteGameDbModel
 import com.dauto.gamediscoveryapp.data.network.ApiService
 import com.dauto.gamediscoveryapp.data.network.paging.GamePagingSource
 import com.dauto.gamediscoveryapp.domain.GameRepository
@@ -15,9 +14,7 @@ import com.dauto.gamediscoveryapp.domain.GameResult
 import com.dauto.gamediscoveryapp.domain.entity.Game
 import com.dauto.gamediscoveryapp.domain.entity.GameDetailInfo
 import com.dauto.gamediscoveryapp.domain.entity.GameQuery
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -69,9 +66,8 @@ class GameRepositoryImpl @Inject constructor(
             pagingData.map {
                 mapper.gameDtoToEntity(it)
             }
-        }.flowOn(Dispatchers.IO)
+        }
     }
-//            .flowOn(Dispatchers.IO)}
 
 
     override suspend fun getGameInfo(gameId: Int): GameResult<GameDetailInfo> {

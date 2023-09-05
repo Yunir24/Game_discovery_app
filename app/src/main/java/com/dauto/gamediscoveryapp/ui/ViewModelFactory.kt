@@ -1,7 +1,5 @@
 package com.dauto.gamediscoveryapp.ui
 
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dauto.gamediscoveryapp.di.ApplicationScope
@@ -18,6 +16,7 @@ class ViewModelFactory @Inject constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return viewModelProviders[modelClass]?.get() as T
     }
+
 }
 //
 //class InjectingSavedStateViewModelFactory @Inject constructor(

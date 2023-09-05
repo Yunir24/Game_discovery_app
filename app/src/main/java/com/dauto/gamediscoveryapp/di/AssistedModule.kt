@@ -27,6 +27,7 @@ interface AssistedModule {
     @ViewModelsKey(HomeViewModel::class)
     fun bindVMFactory(factory: Factory): SavedStateViewModelFactory<out ViewModel>
 }
+
 @Reusable
 class InjectingSavedStateViewModelFactory @Inject constructor(
     private val assistedProviders: @JvmSuppressWildcards
@@ -43,7 +44,7 @@ class InjectingSavedStateViewModelFactory @Inject constructor(
                 handle: SavedStateHandle
             ): T {
                 assistedProviders[modelClass]?.let {
-                   return it.create(handle) as T
+                    return it.create(handle) as T
                 } ?: throw IllegalArgumentException("Unknown model class $modelClass")
 
             }

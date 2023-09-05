@@ -1,6 +1,5 @@
 package com.dauto.gamediscoveryapp.ui.home
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,13 +38,10 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun searchRepo(gameQuery: GameQuery): Flow<PagingData<Game>> {
-//        return getGameList.getGameListByYear(gameQuery)
         return getGameList.getGameListByPaging(gameQuery)
     }
 
     init {
-
-        Log.e("hometest ", "viewmodellll frag" + savedStateHandle.toString())
         val initialQuery: GameQuery = savedStateHandle[LAST_SEARCH_QUERY_KEY] ?: DEFAULT_QUERY
         val lastQueryScrolled: GameQuery =
             savedStateHandle[LAST_QUERY_SCROLLED_KEY] ?: DEFAULT_QUERY
