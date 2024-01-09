@@ -60,6 +60,8 @@ class GameDetailFragment : Fragment() {
         component.inject(this)
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
